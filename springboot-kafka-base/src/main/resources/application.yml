@@ -5,6 +5,7 @@ spring:
     # Producer, 27 config in total
     producer:
       # 默认StringSerializer.class, 默认的序列化类，不能序列化对象，意味着不能发送对象到kafka
+      key-serializer: com.fasterxml.jackson.databind.JsonSerializer # 用来序列化对象
       value-serializer: com.fasterxml.jackson.databind.JsonSerializer # 用来序列化对象
     # Consumer, 24 config intotal
     consumer:
