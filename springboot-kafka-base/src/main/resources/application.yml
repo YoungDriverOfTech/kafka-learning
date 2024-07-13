@@ -4,5 +4,7 @@ spring:
     bootstrap-servers: localhost:9092
     # Producer, 27 config in total
     # producer:
-    # Consumer,
-    # consumer:
+    # Consumer, 24 config intotal
+    consumer:
+      # 从最开的位置读取消息
+      auto-offset-reset: earliest

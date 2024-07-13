@@ -32,3 +32,23 @@
 ## 2. Springboot kafka的相关配置
 都可以在这个类里面找到 **KafkaProperties**
 
+## 3. 消费者的默认消费位置
+### 3.1 offset相关
+默认情况，启动一个新的消费者组的时候，会从每个分区的**最新偏移量**（即该分区中最后一条消息的下一个位置开始消费）  
+如果希望从第一条消息开始消费，需要将消费者的auto.offset.reset设置为earliest
+
+<span style="color: red">PS:</span> 如果之前使用相同的消费者组ID消费过该主题，并且kafka已经保存了该消费者组的偏移量，  
+那么即使设置了auto.offset.reset=earliest，也不会生效。因为kafka只会在找不到偏移量的时候才会使用这个配置，在这种情况下，需要手动充值偏移量或者  
+使用一个新的消费者组ID
+
+### 3.2 充值偏移量
+```shell
+# 重制到最早
+./kafka-consumer-groups.sh --bootstrap-server 127.0.0.1 --group hello-topic-group --topic hello-topic --reset-offsets --to-earliest --execute
+
+# 还可以根据时间什么的重制
+```
+
+### 
+
+
