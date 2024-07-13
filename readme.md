@@ -72,4 +72,5 @@ Replica副本分为Leader Replica和Follower Replica:
 
 > 设置副本个数不能为0，也不能大于节点个数，否则将不能创建Topic
 
+<span style="color: red; font-weight: bold">创建副本的时候，副本的数量不能大于broker的数据</span> 
 
