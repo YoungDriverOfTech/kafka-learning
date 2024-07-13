@@ -12,27 +12,26 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 @Component
 public class EventProducer {
 
     // 加入spring-kafka依赖+配置文件，会自动装配KafkaTemplate到IOC容器中
     @Resource
-    private KafkaTemplate<String, String> kafkaTemplate;
+    private KafkaTemplate<Object, Object> kafkaTemplate;
 
     /**
      * 发送消息，通过传递参数指定topic
      * @param message
      */
     public void sendEvent(String message) throws Exception {
-        CompletableFuture<SendResult<String, String>> future
+        CompletableFuture<SendResult<Object, Object>> future
                 = kafkaTemplate.send("hello-topic", message);
 
         // 拿到发送的结果
 
         // 1. 阻塞等待拿结果
-        SendResult<String, String> sendResult = future.get();
+        SendResult<Object, Object> sendResult = future.get();
         if(sendResult.getRecordMetadata() != null) {
             // kafka确认接收到了额消息
             System.out.println("发送成功" + sendResult.getRecordMetadata().toString());
@@ -74,7 +73,7 @@ public class EventProducer {
         headers.add("wahaha", "huiyuanguozhi".getBytes());
 
         // new 出ProducerRecord对象
-        ProducerRecord<String, String> record = new ProducerRecord<>(
+        ProducerRecord<Object, Object> record = new ProducerRecord<>(
                 "hello-topid", // topic
                 0, // partition
                 System.currentTimeMillis(), // 该record的时间
