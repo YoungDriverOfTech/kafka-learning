@@ -49,6 +49,17 @@
 # 还可以根据时间什么的重制
 ```
 
-### 
+### 3.3 消费偏移量策略
+```yaml
+spring:
+  kafka:
+    consumer:
+      # 消费偏移量策略
+      # earliest： 自动将偏移量重置为最早的偏移量
+      # latest： 自动将偏移量重置为最新的偏移量
+      # none： 如果没有为消费者组找到以前的偏移量，则向消费者抛出异常
+      # exception： 向消费者抛出异常（Spring-kafka不支持）
+      auto-offset-reset: earliest
+```
 
 
