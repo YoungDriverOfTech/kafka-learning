@@ -28,3 +28,7 @@
 ```shell
 ./kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic quickstart-events --from-beginning
 ```
+
+## 2. Springboot kafka的相关配置
+都可以在这个类里面找到 **KafkaProperties**
+
