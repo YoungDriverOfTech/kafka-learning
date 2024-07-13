@@ -6,9 +6,13 @@ import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.header.internals.RecordHeaders;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @Component
 public class EventProducer {
@@ -21,8 +25,32 @@ public class EventProducer {
      * 发送消息，通过传递参数指定topic
      * @param message
      */
-    public void sendEvent(String message) {
-        kafkaTemplate.send("hello-topic", message);
+    public void sendEvent(String message) throws Exception {
+        CompletableFuture<SendResult<String, String>> future
+                = kafkaTemplate.send("hello-topic", message);
+
+        // 拿到发送的结果
+
+        // 1. 阻塞等待拿结果
+        SendResult<String, String> sendResult = future.get();
+        if(sendResult.getRecordMetadata() != null) {
+            // kafka确认接收到了额消息
+            System.out.println("发送成功" + sendResult.getRecordMetadata().toString());
+            System.out.println("消息本身" + sendResult.getProducerRecord().toString());
+        }
+
+        // 2. 非阻塞式拿结果 (thenAccept/thenRun/thenApply)
+        future.thenAccept((t) -> {
+            if(t.getRecordMetadata() != null) {
+                // kafka确认接收到了额消息
+                System.out.println("异步发送成功" + t.getRecordMetadata().toString());
+                System.out.println("异步消息本身" + t.getProducerRecord().toString());
+            }
+        }).exceptionally((t) -> {
+            // 出异常了
+            t.printStackTrace();
+            return null;
+        });
     }
 
     /**

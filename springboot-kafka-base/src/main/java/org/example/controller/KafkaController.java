@@ -17,7 +17,7 @@ public class KafkaController {
     }
 
     @GetMapping("/send/{message}")
-    public String sendMessage(@PathVariable("message") String message) {
+    public String sendMessage(@PathVariable("message") String message) throws Exception {
         kafkaProducer.sendEvent(message);
         return message;
     }
