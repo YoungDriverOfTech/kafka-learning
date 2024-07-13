@@ -1,5 +1,6 @@
 spring:
   kafka:
+    # Kafka broker addresses
     bootstrap-servers: localhost:9092
     # Producer, 27 config in total
     # producer:
