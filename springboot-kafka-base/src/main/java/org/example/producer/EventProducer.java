@@ -56,4 +56,22 @@ public class EventProducer {
         );
         kafkaTemplate.send(record);
     }
+
+    /**
+     * 发送消息到默认topic，通过ProducerRecord
+     * @param message
+     */
+    public void sendToDefaultTopic(String message) {
+        /**
+         *     template:
+         *       # 配置模版默认的主题，如果使用sendDefault方法的话，会发到这个topic里面
+         *       default-topic: default-topic
+         */
+        kafkaTemplate.sendDefault(
+                0, // 0 partition
+                System.currentTimeMillis(),
+                "key",
+                "value"
+        );
+    }
 }
