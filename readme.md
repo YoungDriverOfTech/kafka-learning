@@ -74,3 +74,26 @@ Replica副本分为Leader Replica和Follower Replica:
 
 <span style="color: red; font-weight: bold">创建副本的时候，副本的数量不能大于broker的数据</span> 
 
+### 4.2 命令行指定副本
+```shell
+./kafka-topics.sh --create --topic-name mytopic --partition 3 --replica-factor 3 --bootstrap-servers localhost:9092
+```
+
+### 4.3 代码指定副本
+```java
+package org.example.config;
+
+import org.apache.kafka.clients.admin.NewTopic;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class KafkaConfig {
+    
+    @Bean
+    public NewTopic newTopic() {
+        // topic name, partition number, replica number
+        return new NewTopic("my-topic", 5, (short)1);
+    }
+}
+```
