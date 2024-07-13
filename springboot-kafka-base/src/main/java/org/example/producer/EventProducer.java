@@ -12,6 +12,6 @@ public class EventProducer {
     private KafkaTemplate<String, String> kafkaTemplate;
 
     public void sendEvent(String message) {
-        kafkaTemplate.send("hello-topic", "wahaha");
+        kafkaTemplate.send("hello-topic", message);
     }
 }
