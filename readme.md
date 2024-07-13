@@ -62,4 +62,14 @@ spring:
       auto-offset-reset: earliest
 ```
 
+## 4. Replica
+### 4.1 副本
+Replica：副本，为了实现备份功能，保证集群中的某个节点发生故障时，该节点上的partition数据不丢失，且kafka仍然能够继续工作，kafka提供了副本机制，一个topic的每个分区都有一个或者多个副本  
+
+Replica副本分为Leader Replica和Follower Replica:
+- Leader：每个分区多个副本中的主副本，，生产者发送数据/消费者消费数据都是针对leader副本
+- Follow：只从leader副本中同步数据
+
+> 设置副本个数不能为0，也不能大于节点个数，否则将不能创建Topic
+
 
