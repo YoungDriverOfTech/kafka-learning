@@ -97,3 +97,12 @@ public class KafkaConfig {
     }
 }
 ```
+
+## 5. 生产者
+### 5.1 生产者发送消息的分区策略
+- 生产者写入消息到topic，kafka根据不同的策略将数据分配到不同的分区中
+- 1,默认分配策略 BuiltInPartitioner
+  - 有key：Utils.toPositive(Utils.murmur2(serializedKey)) % numPartitions
+  - 没有key：使用随机数 % numPartitions
+- 2,轮询分配策略：RoundRobinPartitioner
+- 3,自定义分配策略：自己定义
