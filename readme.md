@@ -104,5 +104,9 @@ public class KafkaConfig {
 - 1,默认分配策略 BuiltInPartitioner
   - 有key：Utils.toPositive(Utils.murmur2(serializedKey)) % numPartitions
   - 没有key：使用随机数 % numPartitions
-- 2,轮询分配策略：RoundRobinPartitioner
+- 2,轮询分配策略：RoundRobinPartitioner， 接口（Partitioner）
 - 3,自定义分配策略：自己定义
+
+### 5.2 消息发送流程
+KafkaProducer -> ProducerInterceptors -> Serializer -> Partitioner -> Topic
+
