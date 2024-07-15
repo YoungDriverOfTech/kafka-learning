@@ -191,3 +191,50 @@ public class EventConsumer {
 }
 ```
 
+### 5.4 手动确认消息模式
+```diff
+spring:
+  kafka:
+    # Kafka broker addresses
+    bootstrap-servers: localhost:9092
+    # Producer, 27 config in total
+    producer:
+      # 默认StringSerializer.class, 默认的序列化类，不能序列化对象，意味着不能发送对象到kafka
+      key-serializer: com.fasterxml.jackson.databind.JsonSerializer # 用来序列化对象
+      value-serializer: com.fasterxml.jackson.databind.JsonSerializer # 用来序列化对象
+    # Consumer, 24 config intotal
+    consumer:
+      # 从最开的位置读取消息
+      auto-offset-reset: earliest
+    # 配置监听器
++   listener:
++     # 开启手动确认消息模式
++     ack-mode: manual
+    template:
+      # 配置模版默认的主题，如果使用sendDefault方法的话，会发到这个topic里面
+      default-topic: default-topic
+```
+```java
+package org.example.consumer;
+
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.stereotype.Component;
+
+@Component
+public class EventConsumer {
+
+    @KafkaListener(topics = "hello-topic", groupId = "hello-topic-consumer")
+    public void onEvent04(@Payload String message, Acknowledgment ack) {
+        
+        // 开启手动确认消息是否已经被消费了(默认自动确认)
+        System.out.println("Confirmed message: " + message);
+        ack.acknowledge();
+    }
+}
+
+```

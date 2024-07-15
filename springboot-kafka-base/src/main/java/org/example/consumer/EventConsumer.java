@@ -2,6 +2,7 @@ package org.example.consumer;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
@@ -21,5 +22,13 @@ public class EventConsumer {
         System.out.println("key = " + key);
         System.out.println("partition = " + partition);
         System.out.println("record = " + record);
+    }
+
+    @KafkaListener(topics = "hello-topic", groupId = "hello-topic-consumer")
+    public void onEvent04(@Payload String message, Acknowledgment ack) {
+
+        // 开启手动确认消息是否已经被消费了(默认自动确认)
+        System.out.println("Confirmed message: " + message);
+        ack.acknowledge();
     }
 }
