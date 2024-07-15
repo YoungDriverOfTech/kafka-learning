@@ -113,3 +113,23 @@ KafkaProducer -> ProducerInterceptors -> Serializer -> Partitioner -> Topic
 ### 5.3 自定义生产者拦截器
 实现ProducerInterceptor接口，实现onSend和onAcknowledgement方法。 然后在配置类中配置拦截器即可
 
+## 6. 消费者
+### 5.1 获取生产者发送的消息
+下面代码的Payload注解是用来获得消息体的注解
+```java
+package org.example.consumer;
+
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.stereotype.Component;
+
+@Component
+public class EventConsumer {
+
+    @KafkaListener(topics = "hello-topic", groupId = "hello-topic-consumer")
+    public void onEvent(@Payload String message) {
+        System.out.println("Consumed message = " + message);
+    }
+}
+
+```
