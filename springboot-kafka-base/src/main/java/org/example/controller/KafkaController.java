@@ -2,8 +2,6 @@ package org.example.controller;
 
 import org.example.producer.EventProducer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.support.KafkaHeaders;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
