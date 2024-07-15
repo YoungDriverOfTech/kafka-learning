@@ -233,7 +233,7 @@ public class EventConsumer {
         
         // 开启手动确认消息是否已经被消费了(默认自动确认)
         System.out.println("Confirmed message: " + message);
-        ack.acknowledge();
+        ack.acknowledge(); // 如果不执行这句代码，代表消息没有没确认 -> 消息没有被消费。 有可能消息会被重复消费
     }
 }
 
