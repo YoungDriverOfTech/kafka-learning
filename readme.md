@@ -110,3 +110,6 @@ public class KafkaConfig {
 ### 5.2 消息发送流程
 KafkaProducer -> ProducerInterceptors -> Serializer -> Partitioner -> Topic
 
+### 5.3 自定义生产者拦截器
+实现ProducerInterceptor接口，实现onSend和onAcknowledgement方法。 然后在配置类中配置拦截器即可
+
