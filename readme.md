@@ -275,7 +275,6 @@ public class EventConsumer {
         ack.acknowledge();
     }
 }
-
 ```
 
 ### 5.6 批量消费
