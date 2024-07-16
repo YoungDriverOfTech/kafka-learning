@@ -238,3 +238,42 @@ public class EventConsumer {
 }
 
 ```
+
+### 5.5 指定分区，指定偏移量消费
+```java
+package org.example.consumer;
+
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.PartitionOffset;
+import org.springframework.kafka.annotation.TopicPartition;
+import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.stereotype.Component;
+
+@Component
+public class EventConsumer {
+
+    @KafkaListener(groupId = "${kafka.consumer.group}",
+        topicPartitions = {
+            @TopicPartition(
+                    topic = "${kafka.topic.name}",
+                    partitions = {"0", "1", "2"},
+                    partitionOffsets = {
+                            @PartitionOffset(partition = "3", initialOffset = "3"),
+                            @PartitionOffset(partition = "4", initialOffset = "4")
+                    }
+            )
+        }
+    )
+    public void onEvent05(@Payload String message, Acknowledgment ack) {
+
+        // 开启手动确认消息是否已经被消费了(默认自动确认)
+        System.out.println("Confirmed message: " + message);
+        ack.acknowledge();
+    }
+}
+
+```

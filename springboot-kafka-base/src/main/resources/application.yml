@@ -18,3 +18,9 @@ spring:
     template:
       # 配置模版默认的主题，如果使用sendDefault方法的话，会发到这个topic里面
       default-topic: default-topic
+
+kafka:
+  consumer:
+    group: hello-topic-group
+  topic:
+    name: hello-topic
