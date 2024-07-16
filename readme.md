@@ -277,3 +277,74 @@ public class EventConsumer {
 }
 
 ```
+
+### 5.6 批量消费
+kafka默认是单条消费，通过下面的配置可以实现批量消费  
+```diff
+spring:
+  kafka:
+    # Kafka broker addresses
+    bootstrap-servers: localhost:9092
+    # Producer, 27 config in total
+    producer:
+      # 默认StringSerializer.class, 默认的序列化类，不能序列化对象，意味着不能发送对象到kafka
+      key-serializer: com.fasterxml.jackson.databind.JsonSerializer # 用来序列化对象
+      value-serializer: com.fasterxml.jackson.databind.JsonSerializer # 用来序列化对象
+    # Consumer, 24 config intotal
+    consumer:
+      # 从最开的位置读取消息
++     auto-offset-reset: earliest
+      # 批量消费时候，每次拉去多少条记录
++     max-poll-records: 20
+    # 配置监听器
+    listener:
+      # 开启手动确认消息模式
+      ack-mode: manual
+      # 开启批量消费
++     type: batch
+      
+    template:
+      # 配置模版默认的主题，如果使用sendDefault方法的话，会发到这个topic里面
+      default-topic: default-topic
+
+kafka:
+  consumer:
+    group: hello-topic-group
+  topic:
+    name: hello-topic
+```
+
+```java
+package org.example.consumer;
+
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.PartitionOffset;
+import org.springframework.kafka.annotation.TopicPartition;
+import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+@Component
+public class EventConsumer {
+
+    @KafkaListener(topics = "hello-topic", groupId = "hello-topic-consumer")
+    public void onEvent06(List<ConsumerRecords<Object, Object>> list, Acknowledgment ack) {
+
+        // 开启手动确认消息是否已经被消费了(默认自动确认)
+        System.out.println("Confirmed message: " + list.toString());
+        ack.acknowledge();
+    }
+}
+```
+
+### 5.7 消费拦截器
+- 实现ConsumerInterceptor拦截器接口
+- 在ConsumerFactory配置中注册这个拦截器
+  - props.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG, CustomizeInterceptor.class.getName())
+

@@ -1,6 +1,7 @@
 package org.example.consumer;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.annotation.PartitionOffset;
 import org.springframework.kafka.annotation.TopicPartition;
@@ -9,6 +10,8 @@ import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class EventConsumer {
@@ -50,6 +53,14 @@ public class EventConsumer {
 
         // 开启手动确认消息是否已经被消费了(默认自动确认)
         System.out.println("Confirmed message: " + message);
+        ack.acknowledge();
+    }
+
+    @KafkaListener(topics = "hello-topic", groupId = "hello-topic-consumer")
+    public void onEvent06(List<ConsumerRecords<Object, Object>> list, Acknowledgment ack) {
+
+        // 开启手动确认消息是否已经被消费了(默认自动确认)
+        System.out.println("Confirmed message: " + list.toString());
         ack.acknowledge();
     }
 }

@@ -11,10 +11,15 @@ spring:
     consumer:
       # 从最开的位置读取消息
       auto-offset-reset: earliest
+      # 批量消费时候，每次拉去多少条记录
+      max-poll-records: 20
     # 配置监听器
     listener:
       # 开启手动确认消息模式
       ack-mode: manual
+      # 开启批量消费
+      type: batch
+
     template:
       # 配置模版默认的主题，如果使用sendDefault方法的话，会发到这个topic里面
       default-topic: default-topic
