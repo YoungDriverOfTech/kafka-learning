@@ -114,7 +114,7 @@ KafkaProducer -> ProducerInterceptors -> Serializer -> Partitioner -> Topic
 实现ProducerInterceptor接口，实现onSend和onAcknowledgement方法。 然后在配置类中配置拦截器即可
 
 ## 6. 消费者
-### 5.1 获取生产者发送的消息 @Payload注解
+### 6.1 获取生产者发送的消息 @Payload注解
 下面代码的Payload注解是用来获得消息体的注解
 ```java
 package org.example.consumer;
@@ -134,7 +134,7 @@ public class EventConsumer {
 
 ```
 
-### 5.2 获取消息头 @Header
+### 6.2 获取消息头 @Header
 下面代码展示了从哪个topic，的那个partition，获得的消息，有什么key
 ```java
 package org.example.consumer;
@@ -162,7 +162,7 @@ public class EventConsumer {
 
 ```
 
-### 5.3 使用record对象获取信息
+### 6.3 使用record对象获取信息
 ```java
 package org.example.consumer;
 
@@ -191,7 +191,7 @@ public class EventConsumer {
 }
 ```
 
-### 5.4 手动确认消息模式
+### 6.4 手动确认消息模式
 ```diff
 spring:
   kafka:
@@ -239,7 +239,7 @@ public class EventConsumer {
 
 ```
 
-### 5.5 指定分区，指定偏移量消费
+### 6.5 指定分区，指定偏移量消费
 ```java
 package org.example.consumer;
 
@@ -277,7 +277,7 @@ public class EventConsumer {
 }
 ```
 
-### 5.6 批量消费
+### 6.6 批量消费
 kafka默认是单条消费，通过下面的配置可以实现批量消费  
 ```diff
 spring:
@@ -342,8 +342,40 @@ public class EventConsumer {
 }
 ```
 
-### 5.7 消费拦截器
+### 6.7 消费拦截器
 - 实现ConsumerInterceptor拦截器接口
 - 在ConsumerFactory配置中注册这个拦截器
   - props.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG, CustomizeInterceptor.class.getName())
 
+## 7. 消息转发
+从topic A收到消息后，经过处理然后再发送到topic B上
+```java
+package org.example.consumer;
+
+import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.PartitionOffset;
+import org.springframework.kafka.annotation.TopicPartition;
+import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.stereotype.Component;
+
+import java.util.List;
+
+@Component
+public class EventConsumer {
+    @KafkaListener(topics = "hello-topic", groupId = "hello-topic-consumer")
+    @SendTo(value = "topic-B")
+    public String onEvent07(List<ConsumerRecords<Object, Object>> list) {
+
+        // 开启手动确认消息是否已经被消费了(默认自动确认)
+        System.out.println("Confirmed message: " + list.toString());
+        return list.get(0) + "wahaha";
+    }
+}
+
+```

@@ -9,6 +9,7 @@ import org.springframework.kafka.support.Acknowledgment;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -62,5 +63,14 @@ public class EventConsumer {
         // 开启手动确认消息是否已经被消费了(默认自动确认)
         System.out.println("Confirmed message: " + list.toString());
         ack.acknowledge();
+    }
+
+    @KafkaListener(topics = "hello-topic", groupId = "hello-topic-consumer")
+    @SendTo(value = "topic-B")
+    public String onEvent07(List<ConsumerRecords<Object, Object>> list) {
+
+        // 开启手动确认消息是否已经被消费了(默认自动确认)
+        System.out.println("Confirmed message: " + list.toString());
+        return list.get(0) + "wahaha";
     }
 }
