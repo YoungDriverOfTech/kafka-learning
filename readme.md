@@ -347,7 +347,11 @@ public class EventConsumer {
 - 在ConsumerFactory配置中注册这个拦截器
   - props.put(ConsumerConfig.INTERCEPTOR_CLASSES_CONFIG, CustomizeInterceptor.class.getName())
 
+### 6.8 消费消息的分区策略
+
+
 ## 7. 消息转发
+### 7.1 转发
 从topic A收到消息后，经过处理然后再发送到topic B上
 ```java
 package org.example.consumer;
