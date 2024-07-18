@@ -381,5 +381,4 @@ public class EventConsumer {
         return list.get(0) + "wahaha";
     }
 }
-
 ```
