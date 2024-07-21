@@ -390,3 +390,22 @@ public class EventConsumer {
 - StickyAssignor：亲和度策略
 - CooperativeStickyAssignor：合作
 
+### 8.2 RangeAssignor例子
+因为是默认的分区策略，所以只需要完成消费者个数演示就可以  
+concurrency = "3"属性就代表一共有几个消费者
+```java
+@Component
+public class EventConsumer {
+
+  @KafkaListener(topics = "hello-topic", groupId = "hello-topic-consumer", concurrency = "3")
+  public void onEvent06(List<ConsumerRecords<Object, Object>> list, Acknowledgment ack) {
+
+    // 开启手动确认消息是否已经被消费了(默认自动确认)
+    System.out.println("Confirmed message: " + list.toString());
+    ack.acknowledge();
+  }
+
+}
+
+```
+
