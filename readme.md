@@ -382,3 +382,11 @@ public class EventConsumer {
     }
 }
 ```
+
+## 8. 消费消息分区策略
+### 8.1 分类
+- RangeAssignor：默认的分区策略，平均分，比如有10个分区，3个消费者，那么会分成4-3-3. （10 / 3 = 3，余数给第一个消费者）
+- RoundRobinAssignor：轮询
+- StickyAssignor：亲和度策略
+- CooperativeStickyAssignor：合作
+
