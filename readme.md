@@ -408,4 +408,14 @@ public class EventConsumer {
 }
 
 ```
+### 8.3 RoundRobinAssignor轮询
+
+```diff
+public Map<String, Object> producerConfigs() {
+  Map<String, Object> props = new HashMap<>();
+  // 指定消费分区策略
++ props.put(ConsumerConfig,PARTITION_ASSIGNMENT_STRATEGY_CONFIG, RoundRobinAssignor.class.getName());
+  return props;
+}
+```
 
