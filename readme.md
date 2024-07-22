@@ -431,3 +431,10 @@ public Map<String, Object> producerConfigs() {
   - 0000000000000.snapshot 快照文件，生产者发生故障或者重起时能够回复并继续之前的操作
   - leader-epoch-checkpoint 记录每个分区当前领导者的epoch以及领导者开始写入消息时的起始偏移量
   - partition.metadata 存储关于特定分区的元数据信息
+
+### 9.2 offset的存储
+- 每次消费一个消息并且提交以后，会保存当前消费到的最近的一个offset
+- 在kafka中，有一个__consumer_offsets的topic，消费者消费提交的offset信息会写入到该topic中，__consumer_offsets保存了每个consumer group某一时刻提交的offset信息，默认有50个分区
+- consumer_group保存在哪个分区中的计算公式
+  - Math.abs("groupId" .hashCode() % groupMetadataTopicPartitionCount)
+
