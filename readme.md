@@ -419,3 +419,15 @@ public Map<String, Object> producerConfigs() {
 }
 ```
 
+## 9. Kafka消息存储
+### 9.1 消息的存储
+- Kafka的所有消息都存储在**/tmp/kafka-logs**的目录中，可以通过log.dirs=/tmp/kafka-logs配置
+- kafka的所有消息都是以日志文件的方式来保存
+- kafka一般都是海量的消息数据，为了避免日志文件过大，日志文件都被存放在多个日志目录下面，日志目录的命名规则为：<topic_name>-<partition_id>
+- 比如创建一个名字是firstTopic的topic，其中有3个partition，那么在kafka的数据目录（/tmp/kafka-logs）中，就有3个目录firstTopic-0,firstTopic-1,firstTopic-2
+  - 0000000000000.index 消息索引文件
+  - 0000000000000.log 消息数据文件
+  - 0000000000000.timeindex 消息时间戳索引文件
+  - 0000000000000.snapshot 快照文件，生产者发生故障或者重起时能够回复并继续之前的操作
+  - leader-epoch-checkpoint 记录每个分区当前领导者的epoch以及领导者开始写入消息时的起始偏移量
+  - partition.metadata 存储关于特定分区的元数据信息
