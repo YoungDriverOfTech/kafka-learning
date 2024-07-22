@@ -438,3 +438,7 @@ public Map<String, Object> producerConfigs() {
 - consumer_group保存在哪个分区中的计算公式
   - Math.abs("groupId" .hashCode() % groupMetadataTopicPartitionCount)
 
+## 10. 生产者offset
+### 10.1 生产者offset详解
+- 生产者发送一条消息到kafka的broker的某个topic下某个partition中
+- kafka内部会为每条消息分配一个唯一的offset，该offset就是该消息在partition中的位置
