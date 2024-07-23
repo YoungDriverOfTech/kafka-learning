@@ -438,7 +438,14 @@ public Map<String, Object> producerConfigs() {
 - consumer_group保存在哪个分区中的计算公式
   - Math.abs("groupId" .hashCode() % groupMetadataTopicPartitionCount)
 
-## 10. 生产者offset
+## 10. offset详解
 ### 10.1 生产者offset详解
 - 生产者发送一条消息到kafka的broker的某个topic下某个partition中
 - kafka内部会为每条消息分配一个唯一的offset，该offset就是该消息在partition中的位置
+
+
+### 10.2 消费者offset（最新被消费掉的消息的下一个位置）
+- 消费者offset是消费者需要知道自己已经读取到了哪个位置了，接下来需要从哪个位置开始继续读取消息
+- 每个消费者组（consumer group）中的消费者都会独立地维护自己的offset，当消费者从某个partition读取消息时，它会几率当前读取到的offset，这样即使消费者崩溃或者重启，它叶可以从上次读取的位置继续读取，而不会重复读取或者遗漏消息
+- 注意：消费者offset需要消费消息并提交后才记录offset
+
