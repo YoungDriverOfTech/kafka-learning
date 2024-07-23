@@ -452,5 +452,6 @@ public Map<String, Object> producerConfigs() {
   - 分区中还没有发送过消息，则最新的位置就是0
   - 分区中已经发送过消息，则最新的位置就是生产者offset的下一个位置
 - 消费者消费消息后，如果不提交确认（ack），则offset不更新，提交了才更新
+- 结论：消费者从什么位置开始消费，就看消费者的offset是多少，消费者启动后它的offset是多少
 
 
