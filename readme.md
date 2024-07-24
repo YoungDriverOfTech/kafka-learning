@@ -455,3 +455,8 @@ public Map<String, Object> producerConfigs() {
 - 结论：消费者从什么位置开始消费，就看消费者的offset是多少，消费者启动后它的offset是多少
 
 
+## 11. 架构
+### 11.1 架构图
+![img.png](img.png)
+
+### 11.2 
