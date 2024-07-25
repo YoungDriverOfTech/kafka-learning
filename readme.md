@@ -459,4 +459,18 @@ public Map<String, Object> producerConfigs() {
 ### 11.1 架构图
 ![img.png](img.png)
 
-### 11.2 
+### 11.2 ISR副本
+- ISR副本：在同步中的副本(In-Sync Replicas)，包含了Leader副本和所有与Leader副本保持同步的Follower副本
+- 写请求首先由Leader副本处理，之后Follower副本会从Leader上拉取写入的消息，这个过程会有一定的延迟，导致Follwer副本中保存的消息略少于Leader副本，但是只要没有超出阈值都可以容忍，但是如果一个Follower副本出现异常，比如宕机，网络断开灯原因长时间没有同步到消息，那这个时候，Leader就回把它踢出去，Kafka通过ISR集合来维护一个<可用且消息量与Leader相差不同的副本集合，它是整个副本集合的一个子集>
+- 在kafka中，一个副本要成为ISR副本，需要满足一定的条件
+  - Leader副本本身就是一个ISR副本
+  - Follower副本最后一条消息的offset与Leader副本的最后一条消息的offset之间的差值不能超过指定阈值，超过阈值则该Follower副本将会从ISR列表中移除
+    - replica.lag.time.max.ms:默认是30s，如果该Follower在此时间间隔内一只没有追上过Leader副本的所有消息，则改Follower副本就回呗踢出ISR列表
+    - replica.lag.max.messages:落后了多少条消息时，该Follower副本就回呗踢出ISR列表，改配置在最新版本的kafka中已经过时
+
+### 11.3 LEO 日志末端偏移量
+- LEO(Log End Offset)，记录该副本消息日志中下一条消息的票一亮，注意是下一条消息，也就是说，如果LEO=10，那么表示该副本之保存了偏移量值是[0, 9]的10条消息
+
+### 11.4 高水位值
+- HW(High Watermark)即高水位值，它代表一个便宜量offset信息，表示消息的复制进度，也就是消息已经成功复制到了哪个位置了？即在HW之前的所有消息都已经被成功写入副本中并且可以在所有的副本中找到，因为，消费者可以安全的消费这些已经成功复制的消息
+- 对于同一个副本而言，小于等于HW值的所有消息都被人无视已备份的（replicated），消费者只能拉取到这个offset之前的消息，确保了数据的可靠性
